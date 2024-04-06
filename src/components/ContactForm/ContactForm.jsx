@@ -1,67 +1,73 @@
-import { useId } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useDispatch } from "react-redux";
-import * as yup from "yup";
+import { nanoid } from "https://cdn.jsdelivr.net/npm/nanoid/nanoid.js";
+import * as Yup from "yup";
 import css from "./ContactForm.module.css";
-import { addContact } from "../../redux/contactsOps";
-
-const validationSchema = yup.object().shape({
-  name: yup
-    .string()
-    .min(3, "Too short!")
-    .max(50, "Too long!")
-    .required("Required!"),
-  number: yup
-    .string()
-    .min(3, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
-});
-const initialValues = { name: "", number: "" };
+import { useDispatch } from "react-redux";
+import { addContact } from "../../redux/contacts/operations";
+import toast from "react-hot-toast";
 
 export default function ContactForm() {
+  const idName = nanoid();
+  const idNumber = nanoid();
+
   const dispatch = useDispatch();
-  const nameId = useId();
-  const numberId = useId();
-  const handleSubmit = (values, actions) => {
-    dispatch(addContact(values));
-    actions.resetForm();
-  };
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(3, "Minimum number of characters - 3!")
+      .max(50, "The maximum number of characters is 50!")
+      .required("This field is required!"),
+    number: Yup.string()
+      .min(3, "Minimum number of characters - 3!")
+      .max(50, "The maximum number of characters is 50!")
+      .required("This field is required!"),
+  });
 
   return (
     <Formik
-      initialValues={initialValues}
-      onSubmit={handleSubmit}
       validationSchema={validationSchema}
+      initialValues={{ name: "", number: "" }}
+      onSubmit={(e, { resetForm }) => {
+        dispatch(
+          addContact({
+            name: e.name,
+            number: e.number,
+            id: nanoid(),
+          })
+        )
+          .unwrap()
+          .then(() => {
+            toast.success(
+              "The contact has been successfully added to the list!"
+            );
+          });
+        resetForm();
+      }}
     >
       <Form className={css.form}>
-        <div className={css.fieldContainer}>
-          <label htmlFor={nameId}>Name</label>
-          <Field
-            className={css.field}
-            type="text"
-            name="name"
-            id={nameId}
-          ></Field>
-          <span className={css.error}>
-            <ErrorMessage name="name" />
-          </span>
-        </div>
+        <label className={css.label} htmlFor={idName}>
+          Name
+        </label>
+        <Field className={css.field} id={idName} name="name" />
+        <ErrorMessage
+          className={css.error}
+          name="name"
+          component="p"
+        ></ErrorMessage>
 
-        <div className={css.fieldContainer}>
-          <label htmlFor={numberId}>Number</label>
-          <Field
-            className={css.field}
-            type="text"
-            name="number"
-            id={numberId}
-          ></Field>
-          <span className={css.error}>
-            <ErrorMessage name="number" />
-          </span>
-        </div>
+        <label className={css.label} htmlFor={idNumber}>
+          Number
+        </label>
+        <Field className={css.field} id={idNumber} name="number" />
+        <ErrorMessage
+          className={css.error}
+          name="number"
+          component="p"
+        ></ErrorMessage>
 
-        <button type="submit">Add contact</button>
+        <button className={css.btn} type="submit">
+          Submit
+        </button>
       </Form>
     </Formik>
   );

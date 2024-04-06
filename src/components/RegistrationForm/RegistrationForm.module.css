@@ -1,0 +1,48 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 500px;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn {
+  width: 100px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: rgb(210, 210, 210);
+}
+
+.field {
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  color: rgb(61, 61, 61);
+}
+
+.link {
+  background-color: rgb(235, 235, 235);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: lighter;
+  width: 50px;
+}
+
+.div {
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+}

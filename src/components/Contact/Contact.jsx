@@ -1,24 +1,47 @@
-import { FaPhone } from "react-icons/fa6";
-import { IoPersonSharp } from "react-icons/io5";
-import { useDispatch } from "react-redux";
 import css from "./Contact.module.css";
-import { deleteContact } from "../../redux/contactsOps";
+import { BsPersonHearts } from "react-icons/bs";
+import { FaPhoneSquareAlt } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { deleteContact } from "../../redux/contacts/operations";
+import toast from "react-hot-toast";
 
-export default function Contact({ contact: { id, name, phone } }) {
+export default function Contact({ data }) {
   const dispatch = useDispatch();
+
   return (
-    <li className={css.listItem}>
-      <div className={css.itemInfo}>
-        <p>
-          <IoPersonSharp size="14" />
-          <span className={css.text}>{name}</span>
-        </p>
-        <p>
-          <FaPhone size="14" />
-          <span className={css.text}>{phone}</span>
-        </p>
+    <div className={css.contact}>
+      <div>
+        <div className={css.container}>
+          <BsPersonHearts /> {data.name}
+          <h1 className={css.text}></h1>
+        </div>
+
+        <div className={css.container}>
+          <FaPhoneSquareAlt />
+          <p className={css.text}>{data.number}</p>
+        </div>
       </div>
-      <button onClick={() => dispatch(deleteContact(id))}>Delete</button>
-    </li>
+
+      <button
+        onClick={() =>
+          dispatch(deleteContact(data.id))
+            .unwrap()
+            .then(() => {
+              toast(
+                "The contact has been successfully removed from the list!",
+                {
+                  icon: "📵",
+                }
+              );
+              // toast.success(
+              //   "The contact has been successfully removed from the list!"
+              // );
+            })
+        }
+        className={css.button}
+      >
+        Delete
+      </button>
+    </div>
   );
 }

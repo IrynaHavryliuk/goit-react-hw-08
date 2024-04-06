@@ -1,0 +1,11 @@
+.text {
+  max-width: 1000px;
+  width: 100%;
+  font-size: 24px;
+  font-family: monospace;
+}
+
+.textAccent {
+  font-weight: bold;
+  color: rgb(180, 158, 200);
+}

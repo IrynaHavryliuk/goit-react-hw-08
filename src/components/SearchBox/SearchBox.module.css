@@ -1,14 +1,10 @@
+.input {
+  border-radius: 5px;
+  width: 250px;
+}
+
 .container {
   display: flex;
   flex-direction: column;
-  font-weight: 500;
-  max-width: 270px;
-  margin-bottom: 20px;
-}
-.input {
-  width: 100%;
-  border-radius: 2px;
-  padding: 4px;
-  border: 1px solid #a3a2a2;
-  outline-color: #3651eb;
+  gap: 4px;
 }
