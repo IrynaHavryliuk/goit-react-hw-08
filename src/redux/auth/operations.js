@@ -20,8 +20,8 @@ export const register = createAsyncThunk(
       console.log(response);
 
       return response.data;
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e.message);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
@@ -33,38 +33,48 @@ export const logIn = createAsyncThunk(
       const response = await axios.post("users/login", userInfo);
       setAuthHeader(response.data.token);
       return response.data;
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
 
-export const logOut = createAsyncThunk("outh/logout", async (_, thunkAPI) => {
-  try {
-    const response = await axios.post("users/logout");
-    clearAuthHeader();
-    return response.data;
-  } catch (e) {
-    return thunkAPI.rejectWithValue(e.message);
+export const logOut = createAsyncThunk(
+  "auth/logout",
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.post("users/logout");
+      clearAuthHeader();
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   }
-});
+);
 
 export const refreshUser = createAsyncThunk(
-  "auth/refresh",
+  "auth/refreshUser",
   async (_, thunkAPI) => {
     const reduxState = thunkAPI.getState();
     const savedToken = reduxState.auth.token;
-    console.log(reduxState);
+
+    if (!savedToken) {
+      return thunkAPI.rejectWithValue("No token found");
+    }
 
     setAuthHeader(savedToken);
-    const response = await axios.get("users/current");
-    return response.data;
+
+    try {
+      const response = await axios.get("users/current");
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   },
   {
-    condition: (_, api) => {
-      const reduxState = api.getState();
-      const savedToken = reduxState.auth.token;
-      return savedToken !== null;
+    condition: (_, { getState }) => {
+      const { token } = getState().auth;
+      return token !== null && token !== undefined;
     },
   }
 );
