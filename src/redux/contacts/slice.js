@@ -60,17 +60,13 @@ const contactsSlice = createSlice({
       }),
 });
 
-export const selectedContacts = (state) => state.contacts.items;
 export default contactsSlice.reducer;
 
 export const selectFilteredContacts = createSelector(
-  [selectedContacts, selectNameFilter],
+  [state => state.contacts.items, selectNameFilter],
   (contacts, contactsFilter) => {
     return contacts.filter((contact) =>
       contact.name.toLowerCase().includes(contactsFilter.toLowerCase())
     );
   }
 );
-
-export const selectLoading = (state) => state.contacts.loading;
-export const selectError = (state) => state.contacts.error;
